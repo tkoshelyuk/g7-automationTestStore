@@ -5,8 +5,18 @@ export function fillAuthorizationFields(username = '', password = ''){
     cy.get('[title="Login"]').click();
 }
 
-// if(username){
-//     cy.get('#loginFrm_loginname').type(username)
-// } else {
-//     cy.log('username field not filled')
-// }
+export function findProduct(productName){
+    cy.get('div[class="thumbnails grid row list-inline"]')
+        .then((container) => {
+            const productSelector = `a[class="prdocutname"]:contains(${productName})`;
+
+            if(container.find(productSelector).length) {
+                cy.get(productSelector).eq(0).click();
+                cy.get('span[class="bgnone"]').should('contain',productName);
+            } else {
+                cy.get('ul[class="pagination"] li a').contains('>').click();
+                findProduct(productName);
+            }
+        });
+}
+

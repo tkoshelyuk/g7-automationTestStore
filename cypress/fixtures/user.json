@@ -1,5 +1,5 @@
 {
-  "firstname": "Dwight",
+  "firstname": "myAcc81",
   "lastname": "LastName11",
   "email": "eMail25111111111@test.test",
   "telephone": "2345678987697",
@@ -13,6 +13,7 @@
   "country_id": "220",
   "zone_id": "3490",
   "zone_name": "Kyiv",
-  "loginname": "Louie_Huel63",
-  "password": "Pass123"
+  "loginname": "myAcc81",
+  "password": "123456",
+  "product": "Beauty Eau de Parfum"
 }
