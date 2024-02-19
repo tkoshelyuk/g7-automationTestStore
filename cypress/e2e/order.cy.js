@@ -1,14 +1,17 @@
 import user from '../fixtures/user.json'
-import {fillAuthorizationFields} from '../support/helper'
+import {findProduct} from '../support/helper'
+import loginPage from "../support/pages/LoginPage";
 
 describe('Order suite', () => {
-  it('Order from homepage', () => {
-    cy.log('Open authorization form');
-    cy.visit('/index.php?rt=account/login');
+    it('Order from homepage', () => {
+        loginPage.visit();
+        loginPage.fillLoginFields(user.loginname, user.password);
 
-    fillAuthorizationFields(user.loginname, user.password);
+        findProduct('Benefit Bella Bamba');
 
-    cy.log('User first name should display on page');
-    cy.get('.heading1 .subtext').should('contain', user.firstname);
-  })
+        cy.get('.productpagecart').click()
+        cy.get('#cart_checkout1').click()
+        cy.get('#checkout_btn').click()
+        cy.get('.contentpanel').should('contain', "Thank you for shopping with us!")
+    })
 })

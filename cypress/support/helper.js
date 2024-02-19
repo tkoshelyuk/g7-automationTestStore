@@ -1,12 +1,38 @@
-export function fillAuthorizationFields(username = '', password = ''){
-    cy.log('Fill in authorization fields');
-    username ? cy.get('#loginFrm_loginname').type(username) : cy.log('username field not filled');
-    password ? cy.get('#loginFrm_password').type(password) : cy.log('password field not filled');
-    cy.get('[title="Login"]').click();
+export function findProduct(productName) {
+    // this step is not required and was added to obtain a large selection of products
+    cy.get('#filter_keyword')
+        .type('i')
+        .closest("form")
+        .submit();
+
+    cy.get('body').then((body) => {
+        if (body.find(`[title="${productName}"]`).length > 0) {
+            cy.get(`[title="${productName}"]`).click();
+        } else {
+            cy.get('.pagination li a').contains('>').click();
+            findProduct(productName);
+        }
+    })
 }
 
-// if(username){
-//     cy.get('#loginFrm_loginname').type(username)
-// } else {
-//     cy.log('username field not filled')
+// export function findProduct(productName) {
+//     cy.get('#filter_keyword').type('i').closest('form').submit();
+//
+//     cy.get('ul.pagination a').then(pages => {
+//         return pages.length
+//     }).then(pageCount => {
+//         for (let i = 0; i < pageCount; i++) {
+//             cy.location().then(location => {
+//                 if (!location.search.includes('product/product')) {
+//                     cy.get('body').then(body => {
+//                         if (body.find(`.prdocutname[title="${productName}"]`).length > 0) {
+//                             cy.get(`.prdocutname[title="${productName}"]`).click();
+//                         } else {
+//                             cy.get('ul.pagination a').contains('>').click()
+//                         }
+//                     })
+//                 }
+//             })
+//         }
+//     })
 // }
