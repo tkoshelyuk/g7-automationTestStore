@@ -10,7 +10,7 @@ export function findProduct(productName){
         .then((container) => {
             const productSelector = `a[class="prdocutname"]:contains(${productName})`;
 
-            if(container.find(productSelector).length) {
+            if(container.find(productSelector).length > 0) {
                 cy.get(productSelector).eq(0).click();
                 cy.get('span[class="bgnone"]').should('contain',productName);
             } else {
