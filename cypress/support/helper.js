@@ -1,10 +1,4 @@
 export function findProduct(productName) {
-    // this step is not required and was added to obtain a large selection of products
-    cy.get('#filter_keyword')
-        .type('i')
-        .closest("form")
-        .submit();
-
     cy.get('body').then((body) => {
         if (body.find(`[title="${productName}"]`).length > 0) {
             cy.get(`[title="${productName}"]`).click();
@@ -16,7 +10,6 @@ export function findProduct(productName) {
 }
 
 // export function findProduct(productName) {
-//     cy.get('#filter_keyword').type('i').closest('form').submit();
 //
 //     cy.get('ul.pagination a').then(pages => {
 //         return pages.length

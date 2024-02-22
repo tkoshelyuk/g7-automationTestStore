@@ -7,6 +7,12 @@ describe('Order suite', () => {
         loginPage.visit();
         loginPage.fillLoginFields(user.loginname, user.password);
 
+        // this step is not required and was added to obtain a large selection of products
+        cy.get('#filter_keyword')
+            .type('i')
+            .closest("form")
+            .submit();
+
         findProduct('Benefit Bella Bamba');
 
         cy.get('.productpagecart').click()
