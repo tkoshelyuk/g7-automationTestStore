@@ -9,4 +9,11 @@ export default class BasePage {
         return cy.get('#filter_keyword');
     }
 
+    setSearchParametrInput(searchText){
+        return cy.get('#filter_keyword')
+            .type(searchText)
+            .closest("form");
+    }
+
 }
+
