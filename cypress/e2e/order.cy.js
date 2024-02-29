@@ -1,14 +1,24 @@
 import user from '../fixtures/user.json'
-import {fillAuthorizationFields} from '../support/helper'
+import {findProduct} from '../support/helper'
+import loginPage from "../support/pages/LoginPage";
+import commonMethods from "../support/pages/CommonMethods";
+import pDPPage from "../support/pages/PDPPage";
+import shoppingCartPage from "../support/pages/ShoppingCartPage";
+import checkoutPage from "../support/pages/CheckoutPage";
+import orderPage from "../support/pages/OrderPage";
 
 describe('Order suite', () => {
-  it('Order from homepage', () => {
-    cy.log('Open authorization form');
-    cy.visit('/index.php?rt=account/login');
+    it('Order from homepage', () => {
+        loginPage.visit();
+        loginPage.fillLoginFields(user.loginname, user.password);
 
-    fillAuthorizationFields(user.loginname, user.password);
+        //search for required product and open it in Cart
+        commonMethods.setSearchParametrInput('i').submit();
+        findProduct('Benefit Bella Bamba');
 
-    cy.log('User first name should display on page');
-    cy.get('.heading1 .subtext').should('contain', user.firstname);
-  })
+        pDPPage.addProductToCart();
+        shoppingCartPage.goToCheckout();
+        checkoutPage.submitOrder();
+        orderPage.getThankYouText().should('contain', "Thank you for shopping with us!");
+    })
 })
