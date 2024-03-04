@@ -2,10 +2,9 @@ import BasePage from "./BasePage";
 
 class CommonMethods extends BasePage {
 
-    setSearchParametrInput(searchText){
-        return cy.get('#filter_keyword')
-            .type(searchText)
-            .closest("form");
+
+    closeBanner(){
+        cy.get('[aria-label="Close Welcome Banner"]').click();
     }
 }
 

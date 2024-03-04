@@ -1,34 +1,57 @@
 import BasePage from "./BasePage";
 
 class LoginPage extends BasePage {
-
     visit() {
         cy.log('Open authorization form');
-        cy.visit('/index.php?rt=account/login');
+        cy.visit('/#/login');
     }
 
-    getLoginNameField() {
-        return cy.get('#loginFrm_loginname');
+
+    getEmailField() {
+        return cy.get('#email');
+    }
+
+    setEmailField(mail) {
+        this.getEmailField().type(mail);
     }
 
     getPasswordField() {
-        return cy.get('#loginFrm_password');
+        return cy.get('#password');
+    }
+
+    setPasswordField(password) {
+        this.getPasswordField().type(password)
     }
 
     getSubmitButton() {
-        return cy.get('[title="Login"]');
+        return cy.get('#loginButton');
     }
 
-    getErrorMessageText() {
-        return cy.get('.heading1 .subtext');
-    }
 
     fillLoginFields(username = '', password = '') {
         cy.log('Fill in authorization fields');
-        username ? this.getLoginNameField().type(username) : cy.log('Skip username field');
+        username ? this.getEmailField().type(username) : cy.log('Skip username field');
         password ? this.getPasswordField().type(password) : cy.log('Skip password field');
         this.getSubmitButton().click();
     }
+
+    getErrorMessageText(){
+        return cy.get('div [class="error ng-star-inserted"]');
+    }
+
+    getEmptyEmailError(){
+        this.getEmailField().click();
+        cy.get('[class="mat-checkbox-label"]').click();
+        return cy.get('mat-error[class="mat-error ng-tns-c119-7 ng-star-inserted"]');
+    }
+
+    getEmptyPasswordError(){
+        this.getPasswordField().click();
+        cy.get('[class="mat-checkbox-label"]').click();
+        return cy.get('mat-error[class="mat-error ng-tns-c119-8 ng-star-inserted"]');
+    }
+
+
 }
 
 export default new LoginPage()

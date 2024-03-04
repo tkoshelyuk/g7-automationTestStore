@@ -1,54 +1,36 @@
 import user from '../fixtures/user.json'
 import {faker} from '@faker-js/faker'
-import RegistrationPage from "../support/pages/RegistrationPage";
 import loginPage from "../support/pages/LoginPage";
-import accountPage from "../support/pages/AccountPage";
+import registrationPage from "../support/pages/RegistrationPage";
+import commonMethods from "../support/pages/CommonMethods";
+import mainPage from "../support/pages/MainPage";
 
-user.firstname = faker.person.firstName();
-user.lastname = faker.person.lastName();
+
+
 user.email = faker.internet.email({ firstName: 'Jeanne', lastName: 'Doe', provider: 'some.fakeMail.qa', allowSpecialCharacters: false });
-user.loginname = faker.internet.userName();
 
-describe('register with valid data', () => {
+describe('User registration', () => {
   it('Registration', () => {
-    RegistrationPage.visit();
+    registrationPage.visit();
+    commonMethods.closeBanner();
 
-    cy.log('Fill in the fields Personal Details fields');
-
-    RegistrationPage.setFirstNameField();
-    RegistrationPage.setLastNameField();
-    RegistrationPage.setEmailField();
-    RegistrationPage.setPhoneField();
-    RegistrationPage.setFaxField();
-
-    cy.log('Fill in the Your Address fields');
-    RegistrationPage.setAddress1Field();
-    RegistrationPage.setCityField();
-    RegistrationPage.setPostCodeField();
-    RegistrationPage.setCountryField();
-    RegistrationPage.setZoneField();
-
-    cy.log('Fill in the Login Details fields');
-    RegistrationPage.setLoginField();
-    RegistrationPage.setPasswordField();
-    RegistrationPage.setPasswordConfirmField();
-    RegistrationPage.setPolicyField();
-
-
-    cy.log('Submit form and check results');
-    RegistrationPage.submitRegistrationForm();
-    RegistrationPage
-        .getRegistrationMessage()
-        .should('have.prop', 'textContent', ' Your Account Has Been Created!');
+    cy.log('Create new user');
+    registrationPage.createNewUser(user.email);
+    cy.log('Verify after registration user sees login form')
+    registrationPage
+        .getLoginButton()
+        .should('be.visible');
   })
 
 
   it('Authorization', () => {
     loginPage.visit();
-    loginPage.fillLoginFields(user.loginname, user.password);
+    commonMethods.closeBanner();
+    cy.log('Login with created user')
+    loginPage.fillLoginFields(user.email, user.password);
 
-    cy.log('User first name should display on page');
-    accountPage.getFirstNameText().should('contain', user.firstname);
+    cy.log('All products should display on page');
+    mainPage.getPageTitle().should('contain', "All Products");
   })
 
 

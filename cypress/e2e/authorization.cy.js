@@ -1,40 +1,54 @@
 import user from '../fixtures/user.json'
 import loginPage from "../support/pages/LoginPage";
-import accountPage from "../support/pages/AccountPage";
+import commonMethods from "../support/pages/CommonMethods";
+import registrationPage from "../support/pages/RegistrationPage";
+import mainPage from "../support/pages/MainPage";
+
 
 describe('Authorization positive scenarios', () => {
     it('Authorization', () => {
-        loginPage.visit();
-        loginPage.fillLoginFields(user.loginname, user.password);
+        cy.log('Create new user');
+        registrationPage.createNewUser(user.email);
 
-        cy.log('User first name should display on page');
-        accountPage.getFirstNameText().should('contain', user.firstname);
+        cy.log('Login with created user');
+        loginPage.visit();
+        loginPage.fillLoginFields(user.email, user.password);
+
+        cy.log('Verify user is on main page');
+        mainPage.getPageTitle().should('contain', "All Products");
     })
 })
 
 describe('Authorization negative scenarios', () => {
 
-    it('Authorization without entered username', () => {
+    it('Authorization without entered email', () => {
         loginPage.visit();
-        loginPage.fillLoginFields('', user.password);
+        commonMethods.closeBanner();
 
-        cy.log('User first name should display on page');
-        loginPage.getErrorMessageText().should('contain', 'Error: Incorrect login or password provided.');
+        cy.log('Verify email error and Submit button is disabled');
+        loginPage.setPasswordField('pass');
+        loginPage.getEmptyEmailError().should('contain', 'Please provide an email address.');
+        loginPage.getSubmitButton().should('be.disabled');
     })
 
     it('Authorization without entered password', () => {
         loginPage.visit();
-        loginPage.fillLoginFields(user.loginname);
+        commonMethods.closeBanner();
 
-        cy.log('User first name should display on page');
-        loginPage.getErrorMessageText().should('contain', 'Error: Incorrect login or password provided.');
+        cy.log('Verify password error and Submit button is disabled');
+        loginPage.setEmailField(user.email);
+        loginPage.getEmptyPasswordError().should('contain', 'Please provide a password.');
+        loginPage.getSubmitButton().should('be.disabled');
     })
 
-    it('Authorization with empty fields', () => {
+    it('Authorization with wrong credentials', () => {
         loginPage.visit();
-        loginPage.fillLoginFields();
+        commonMethods.closeBanner();
 
-        cy.log('User first name should display on page');
-        loginPage.getErrorMessageText().should('contain', 'Error: Incorrect login or password provided.');
+        cy.log('Login with correct email and wrong password');
+        loginPage.fillLoginFields(user.email,'any');
+
+        cy.log('Verify wrong credentials error');
+        loginPage.getErrorMessageText().should('contain', 'Invalid email or password.');
     })
 })

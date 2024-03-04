@@ -3,7 +3,10 @@ import BasePage from "./BasePage";
 class OrderPage extends BasePage {
 
     getThankYouText() {
-        return cy.get('.contentpanel');
+        return cy.get('h1');
+    }
+    clickPlaceOrderButton() {
+         cy.get('span:contains("Place your order and pay")').eq(0).click();
     }
 
 }

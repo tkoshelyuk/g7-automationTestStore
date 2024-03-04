@@ -2,75 +2,46 @@ import BasePage from "./BasePage";
 import user from "../../fixtures/user.json";
 
 class RegistrationPage extends BasePage {
-
     visit() {
         cy.log('Open registration form');
-        cy.visit('/');
-        cy.get('#customer_menu_top').click();
-        cy.get('[title=Continue]').click();
+        cy.visit('/#/register');
     }
 
-    setFirstNameField() {
-        return cy.get('#AccountFrm_firstname').type(user.firstname);
-    }
-
-    setLastNameField() {
-        return cy.get('#AccountFrm_lastname').type(user.lastname);
-    }
-
-    setEmailField() {
-        return cy.get('#AccountFrm_email').type(user.email);
-    }
-
-    setPhoneField() {
-        return cy.get('#AccountFrm_telephone').type(user.telephone);
-    }
-
-    setFaxField() {
-        return cy.get('#AccountFrm_fax').type(user.fax);
-    }
-
-    setAddress1Field() {
-        return cy.get('#AccountFrm_address_1').type(user.address_1);
-    }
-
-    setCityField() {
-        return cy.get('#AccountFrm_city').type(user.city);
-    }
-
-    setPostCodeField() {
-        return cy.get('#AccountFrm_postcode').type(user.postcode);
-    }
-
-    setCountryField() {
-        return cy.get('#AccountFrm_country_id').select(user.country);
-    }
-
-    setZoneField() {
-        return cy.get('#AccountFrm_zone_id').select(user.zone_name);
-    }
-
-    setLoginField() {
-        return cy.get('#AccountFrm_loginname').type(user.loginname);
+    setEmailField(mail) {
+        return cy.get('#emailControl').type(mail,{force: true});
     }
     setPasswordField() {
-        return cy.get('#AccountFrm_password').type(user.password);
+        return cy.get('#passwordControl').type(user.password,{force: true});
     }
-    setPasswordConfirmField() {
-        return cy.get('#AccountFrm_confirm').type(user.password);
+    setRepeatPasswordField() {
+        return cy.get('#repeatPasswordControl').type(user.repeatPassword,{force: true});
     }
-
-    setPolicyField() {
-        return cy.get('#AccountFrm_agree').check();
-    }
-
-    getRegistrationMessage(){
-        return cy.get('.maintext');
+    setQuestionField() {
+        cy.get('[aria-label="Selection list for the security question"]').click({force: true});
+        return cy.get('[class="mat-option-text"]:contains("Maternal grandmother\'s first name?")').click({force: true});
     }
 
+    setAnswerField() {
+        return cy.get('#securityAnswerControl').type(user.answer,{force: true});
+    }
 
     submitRegistrationForm(){
-        cy.get('[title=Continue]').click();
+        cy.get('#registerButton').click({force: true});
+    }
+
+    getLoginButton(){
+        return cy.get('#loginButton');
+    }
+
+   createNewUser(mail){
+        this.visit();
+        //this.closeBanner();
+        this.setEmailField(mail);
+        this.setPasswordField();
+        this.setRepeatPasswordField();
+        this.setQuestionField();
+        this.setAnswerField();
+        this.submitRegistrationForm();
     }
 
 }
